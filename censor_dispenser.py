@@ -64,4 +64,49 @@ negative_words = ["concerned", "behind", "danger", "dangerous", "alarming", "ala
                   "unhappy", "bad", "upset", "awful", "broken", "damage", "damaging", "dismal", "distressed",
                   "distressed", "concerning", "horrible", "horribly", "questionable"]
 
-print(negative_word_detector(email_three, negative_words))
+# print(negative_word_detector(email_three, negative_words))
+
+punctuation = [",", "!", "?", ".", "%", "/", "(", ")"]
+
+def censor_four(input_text, censored_list):
+  input_text_words = []
+  for x in input_text.split(" "):
+    x1 = x.split("\n")
+    for word in x1:
+      input_text_words.append(word)
+  for i in range(0,len(input_text_words)):
+    checked_word = input_text_words[i].lower()
+    for x in punctuation:
+      checked_word = checked_word.strip(x)
+    if checked_word in censored_list:
+
+      # Censoring the targeted word
+      word_clean = input_text_words[i]
+      censored_word = ""
+      for x in punctuation:
+        word_clean = word_clean.strip(x)
+      for x in range(0,len(word_clean)):
+        censored_word = censored_word + "X"
+      input_text_words[i] = input_text_words[i].replace(word_clean, censored_word)
+
+      # Censoring the word before the targeted word
+      word_before = input_text_words[i-1]
+      for x in punctuation:
+        word_before = word_before.strip(x)
+      censored_word_before = ""
+      for x in range(0,len(word_before)):
+        censored_word_before = censored_word_before + "X"
+      input_text_words[i-1] = input_text_words[i-1].replace(word_before, censored_word_before)
+
+      # Censoring the word after the targeted word
+      word_after = input_text_words[i+1]
+      for x in punctuation:
+        word_after = word_after.strip(x)
+      censored_word_after = ""
+      for x in range(0,len(word_after)):
+        censored_word_after = censored_word_after + "X"
+      input_text_words[i+1] = input_text_words[i+1].replace(word_after, censored_word_after)
+  return " ".join(input_text_words)
+
+censor_all = proprietary_terms + negative_words
+print(censor_four(email_four, censor_all))
